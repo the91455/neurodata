@@ -1,3 +1,12 @@
+// Setup Modal Elements
+const setupModal = document.getElementById('setupModal');
+const useEnvBtn = document.getElementById('useEnvBtn');
+const enterKeyBtn = document.getElementById('enterKeyBtn');
+const apiKeyInput = document.getElementById('apiKeyInput');
+const apiKeyField = document.getElementById('apiKeyField');
+const saveKeyBtn = document.getElementById('saveKeyBtn');
+
+// App Elements
 const generateBtn = document.getElementById('generateBtn');
 const topicInput = document.getElementById('topic');
 const outputContent = document.getElementById('outputContent');
@@ -7,6 +16,48 @@ const copyBtn = document.getElementById('copyBtn');
 const clearBtn = document.getElementById('clearBtn');
 const btnText = document.querySelector('.btn-text');
 const btnLoader = document.querySelector('.btn-loader');
+
+// Check if setup is needed
+let apiKeyMode = localStorage.getItem('apiKeyMode'); // 'env' or 'manual'
+let userApiKey = sessionStorage.getItem('userApiKey');
+
+// Show modal if not configured
+if (!apiKeyMode) {
+    setupModal.classList.remove('hidden');
+}
+
+// Use .env file (local mode)
+useEnvBtn.addEventListener('click', () => {
+    localStorage.setItem('apiKeyMode', 'env');
+    apiKeyMode = 'env';
+    setupModal.classList.add('hidden');
+});
+
+// Enter API key manually (cloud mode)
+enterKeyBtn.addEventListener('click', () => {
+    apiKeyInput.classList.remove('hidden');
+    document.querySelector('.setup-options').style.display = 'none';
+});
+
+// Save API key
+saveKeyBtn.addEventListener('click', () => {
+    const key = apiKeyField.value.trim();
+    if (!key) {
+        alert('Lütfen geçerli bir API key girin');
+        return;
+    }
+
+    if (!key.startsWith('AIzaSy')) {
+        alert('Geçersiz API key formatı. Key "AIzaSy" ile başlamalı.');
+        return;
+    }
+
+    sessionStorage.setItem('userApiKey', key);
+    localStorage.setItem('apiKeyMode', 'manual');
+    userApiKey = key;
+    apiKeyMode = 'manual';
+    setupModal.classList.add('hidden');
+});
 
 generateBtn.addEventListener('click', async () => {
     const prompt = topicInput.value.trim();
@@ -20,12 +71,22 @@ generateBtn.addEventListener('click', async () => {
     outputContent.textContent = '';
 
     try {
+        // Prepare request body
+        const requestBody = {
+            prompt: `Generate training data/examples for the following topic. Format the output clearly. Topic: ${prompt}`
+        };
+
+        // Add API key if in manual mode
+        if (apiKeyMode === 'manual' && userApiKey) {
+            requestBody.apiKey = userApiKey;
+        }
+
         const response = await fetch('/api/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ prompt: `Generate training data/examples for the following topic. Format the output clearly. Topic: ${prompt}` })
+            body: JSON.stringify(requestBody)
         });
 
         const data = await response.json();

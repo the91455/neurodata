@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +10,48 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
+    <!-- Setup Modal -->
+    <div id="setupModal" class="modal hidden">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <span class="logo-icon">🔑</span>
+                <h2>API Key Kurulumu</h2>
+                <p class="modal-subtitle">Gemini AI kullanmak için API anahtarınızı yapılandırın</p>
+            </div>
+
+            <div class="setup-options">
+                <button class="setup-option" id="useEnvBtn">
+                    <div class="option-icon">💻</div>
+                    <h3>Local Çalıştırma</h3>
+                    <p>API key'i .env dosyasına ekledim</p>
+                    <span class="option-badge">Önerilen</span>
+                </button>
+
+                <button class="setup-option" id="enterKeyBtn">
+                    <div class="option-icon">☁️</div>
+                    <h3>Cloud Deployment</h3>
+                    <p>API key'i şimdi gireceğim</p>
+                    <span class="option-badge">Vercel/Netlify</span>
+                </button>
+            </div>
+
+            <!-- API Key Input (Hidden by default) -->
+            <div id="apiKeyInput" class="api-key-section hidden">
+                <div class="input-group">
+                    <label for="apiKeyField">Gemini API Key</label>
+                    <input type="password" id="apiKeyField" placeholder="AIzaSy..." />
+                    <small>API key'inizi <a href="https://ai.google.dev/" target="_blank">Google AI Studio</a>'dan
+                        alabilirsiniz</small>
+                </div>
+                <button id="saveKeyBtn" class="primary-button">Kaydet ve Devam Et</button>
+            </div>
+        </div>
+    </div>
+
     <div class="background-glow"></div>
-    
+
     <main class="container">
         <header>
             <div class="logo">
@@ -24,9 +64,11 @@
         <section class="control-panel glass-card">
             <div class="input-group">
                 <label for="topic">Training Topic / Prompt</label>
-                <textarea id="topic" placeholder="E.g., Generate 5 examples of Python list comprehensions with explanations..." rows="4"></textarea>
+                <textarea id="topic"
+                    placeholder="E.g., Generate 5 examples of Python list comprehensions with explanations..."
+                    rows="4"></textarea>
             </div>
-            
+
             <button id="generateBtn" class="primary-button">
                 <span class="btn-text">Generate Training Data</span>
                 <span class="btn-loader hidden"></span>
@@ -48,4 +90,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>

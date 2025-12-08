@@ -39,12 +39,14 @@ class GeminiHandler(http.server.SimpleHTTPRequestHandler):
                 data = json.loads(post_data)
                 prompt = data.get('prompt', '')
                 
-                api_key = os.environ.get('GEMINI_API')
+                # Get API key from request (cloud mode) or .env (local mode)
+                api_key = data.get('apiKey') or os.environ.get('GEMINI_API') or os.environ.get('GEMINI_API_KEY')
+                
                 if not api_key or 'YOUR_API_KEY' in api_key:
                     self.send_response(500)
                     self.send_header('Content-type', 'application/json')
                     self.end_headers()
-                    self.wfile.write(json.dumps({'error': 'API Key not configured in .env'}).encode())
+                    self.wfile.write(json.dumps({'error': 'API Key not configured. Please set up your API key.'}).encode())
                     return
 
                 # Use gemini-2.5-flash which is currently available
