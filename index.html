@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroData | AI Training Helper</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-glow"></div>
+    
+    <main class="container">
+        <header>
+            <div class="logo">
+                <span class="logo-icon">✨</span>
+                <h1>NeuroData</h1>
+            </div>
+            <p class="subtitle">Generate high-quality training datasets with Gemini AI</p>
+        </header>
+
+        <section class="control-panel glass-card">
+            <div class="input-group">
+                <label for="topic">Training Topic / Prompt</label>
+                <textarea id="topic" placeholder="E.g., Generate 5 examples of Python list comprehensions with explanations..." rows="4"></textarea>
+            </div>
+            
+            <button id="generateBtn" class="primary-button">
+                <span class="btn-text">Generate Training Data</span>
+                <span class="btn-loader hidden"></span>
+            </button>
+        </section>
+
+        <section class="results-area hidden" id="resultsArea">
+            <div class="results-header">
+                <h2>Generated Dataset</h2>
+                <div class="actions">
+                    <button class="icon-btn" id="downloadBtn" title="Download">💾</button>
+                    <button class="icon-btn" id="copyBtn" title="Copy to Clipboard">📋</button>
+                    <button class="icon-btn" id="clearBtn" title="Clear">🗑️</button>
+                </div>
+            </div>
+            <div class="output-content glass-card" id="outputContent"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
