@@ -43,12 +43,12 @@ enterKeyBtn.addEventListener('click', () => {
 saveKeyBtn.addEventListener('click', () => {
     const key = apiKeyField.value.trim();
     if (!key) {
-        alert('Lütfen geçerli bir API key girin');
+        showToast('Lütfen geçerli bir API key girin', 'error');
         return;
     }
 
     if (!key.startsWith('AIzaSy')) {
-        alert('Geçersiz API key formatı. Key "AIzaSy" ile başlamalı.');
+        showToast('Geçersiz API key formatı. Key "AIzaSy" ile başlamalı.', 'error');
         return;
     }
 
@@ -62,7 +62,7 @@ saveKeyBtn.addEventListener('click', () => {
 generateBtn.addEventListener('click', async () => {
     const prompt = topicInput.value.trim();
     if (!prompt) {
-        alert('Please enter a topic or instructions.');
+        showToast('Please enter a topic or instructions.', 'warning');
         return;
     }
 
@@ -111,7 +111,7 @@ generateBtn.addEventListener('click', async () => {
 
     } catch (error) {
         console.error('Error:', error);
-        alert(`Error: ${error.message}`);
+        showToast(`Error: ${error.message}`, 'error');
     } finally {
         setLoading(false);
     }
@@ -140,7 +140,7 @@ copyBtn.addEventListener('click', () => {
 downloadBtn.addEventListener('click', () => {
     const text = outputContent.textContent;
     if (!text) {
-        alert('No content to download');
+        showToast('No content to download', 'warning');
         return;
     }
 
@@ -224,3 +224,32 @@ clearBtn.addEventListener('click', () => {
     resultsArea.classList.add('hidden');
     outputContent.textContent = '';
 });
+
+// Toast Notification System
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    let icon = 'ℹ️';
+    if (type === 'success') icon = '✅';
+    if (type === 'error') icon = '❌';
+    if (type === 'warning') icon = '⚠️';
+
+    toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span class="toast-message">${message}</span>
+    `;
+
+    container.appendChild(toast);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.classList.add('hiding');
+        toast.addEventListener('animationend', () => {
+            if (container.contains(toast)) {
+                container.removeChild(toast);
+            }
+        });
+    }, 3000);
+}

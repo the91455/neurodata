@@ -8,10 +8,13 @@
 ![License](https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge)
 
 **Gemini AI ile yüksek kaliteli eğitim veri setleri oluşturun**
+*Generate high-quality AI training datasets with Gemini*
 
 [Özellikler](#-özellikler) • [Kurulum](#-kurulum) • [Kullanım](#-kullanım) • [API](#-api-dokümantasyonu) • [Katkıda Bulunma](#-katkıda-bulunma)
 
 </div>
+
+<!-- Keywords for Search Engines: AI Train, AI Training, Machine Learning Dataset, Train AI Models, Training Data Generator, Yapay Zeka Eğitimi, Veri Seti Oluşturucu -->
 
 ---
 
@@ -34,12 +37,12 @@
 
 ## 🎯 Hakkında
 
-**NeuroData**, Google'ın Gemini AI modelini kullanarak makine öğrenimi ve yapay zeka projeleri için hızlı ve kolay bir şekilde eğitim veri setleri oluşturmanıza olanak sağlayan modern bir web uygulamasıdır.
+**NeuroData**, Google'ın Gemini AI modelini kullanarak makine öğrenimi ve yapay zeka projeleri için hızlı ve kolay bir şekilde **AI training data** (eğitim verisi) oluşturmanıza olanak sağlayan modern bir web uygulamasıdır. Özellikle LLM fine-tuning, makine öğrenimi modeli eğitimi (ML training) ve veri analizi projeleri için idealdir. "AI train" süreçlerinizi hızlandırmak için tasarlandı.
 
 ### 🌟 Neden NeuroData?
 
-- ⚡ **Hızlı ve Kolay**: Birkaç tıklama ile profesyonel veri setleri oluşturun
-- 🧠 **Akıllı Format Algılama**: JSON, CSV, Python, SQL ve daha fazlası
+- ⚡ **Hızlı ve Kolay**: Birkaç tıklama ile **AI training** için profesyonel veri setleri oluşturun
+- 🧠 **Akıllı Format Algılama**: **AI model training** için uygun JSON, CSV, Python, SQL ve daha fazlası
 - 🎨 **Modern Arayüz**: Glassmorphism tasarım ve smooth animasyonlar
 - 💾 **Zaman Damgalı Kayıt**: Otomatik dosya isimlendirme ve format seçimi
 - 🔒 **Güvenli**: API anahtarlarınız yerel .env dosyasında saklanır
@@ -299,8 +302,8 @@ neurodata/
 ├── ⚡ app.js              # Frontend JavaScript (akıllı format algılama)
 ├── 🐍 server.py           # Python HTTP server + Gemini API proxy
 ├── 🔐 .env                # API anahtarları
-├── � LICENSE             # GPL-3.0 Lisansı
-└── � README.md           # Proje dokümantasyonu
+├── 📄 LICENSE             # GPL-3.0 Lisansı
+└── 📖 README.md           # Proje dokümantasyonu
 ```
 
 ### Dosya Açıklamaları
