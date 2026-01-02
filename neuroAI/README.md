@@ -113,7 +113,7 @@ NeuroData, prompt'unuza göre **otomatik olarak** doğru dosya formatını algı
 ### Adım 1: Projeyi Klonlayın
 
 ```bash
-git clone https://github.com/kullaniciadi/neurodata.git
+git clone https://github.com/the91455/neurodata.git
 cd neurodata
 ```
 

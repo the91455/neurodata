@@ -1,0 +1,16 @@
+{
+  "name": "NeuroData AI",
+  "short_name": "NeuroData",
+  "description": "Generate high-quality AI training datasets with Gemini AI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

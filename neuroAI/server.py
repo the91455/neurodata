@@ -8,6 +8,9 @@ import sys
 
 PORT = 8003
 
+# Force working directory to the script's location
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 def load_env():
     """Simple .env loader for standard library usage"""
     env_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -38,10 +41,63 @@ class GeminiHandler(http.server.SimpleHTTPRequestHandler):
             try:
                 data = json.loads(post_data)
                 prompt = data.get('prompt', '')
+                model_id = data.get('model', 'gemini-2.0-flash-exp') # Default to new fast model
                 
                 # Get API key from request (cloud mode) or .env (local mode)
                 api_key = data.get('apiKey') or os.environ.get('GEMINI_API') or os.environ.get('GEMINI_API_KEY')
                 
+                # Support for Multimodal (Images)
+                image_data = data.get('image') # Base64 string
+                image_mime = data.get('imageMime', 'image/jpeg')
+                
+                parts = [{"text": prompt}]
+                if image_data:
+                    parts.append({
+                        "inline_data": {
+                            "mime_type": image_mime,
+                            "data": image_data
+                        }
+                    })
+
+                # Construct URL with selected model
+                if model_id == 'local-ollama':
+                    url = "http://127.0.0.1:11434/api/generate"
+                    # User has llama3.1:latest installed based on logs
+                    payload = {
+                        "model": "llama3.1:latest", 
+                        "prompt": prompt,
+                        "stream": False
+                    }
+                    try:
+                        req = urllib.request.Request(
+                            url,
+                            data=json.dumps(payload).encode('utf-8'),
+                            headers={'Content-Type': 'application/json'}
+                        )
+                        with urllib.request.urlopen(req) as response:
+                            res = json.loads(response.read())
+                            gemini_like = {
+                                "candidates": [{
+                                    "content": {"parts": [{"text": res.get("response", "")}]}
+                                }]
+                            }
+                            self.send_response(200)
+                            self.send_header('Content-type', 'application/json')
+                            self.end_headers()
+                            self.wfile.write(json.dumps(gemini_like).encode())
+                    except urllib.error.URLError as e:
+                        self.send_response(503)
+                        self.send_header('Content-type', 'application/json')
+                        self.end_headers()
+                        self.wfile.write(json.dumps({'error': f'Ollama Connection Error: {str(e.reason)}. Ensure Ollama is running on 127.0.0.1:11434'}).encode())
+                    except urllib.error.HTTPError as e:
+                        self.send_response(e.code)
+                        self.send_header('Content-type', 'application/json')
+                        self.end_headers()
+                        msg = "Local model 'llama3.1:latest' not found. Please run 'ollama pull llama3.1' or update server.py." if e.code == 404 else f"Ollama HTTP Error: {e.reason}"
+                        self.wfile.write(json.dumps({'error': msg}).encode())
+                    return
+
                 if not api_key or 'YOUR_API_KEY' in api_key:
                     self.send_response(500)
                     self.send_header('Content-type', 'application/json')
@@ -49,12 +105,11 @@ class GeminiHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(json.dumps({'error': 'API Key not configured. Please set up your API key.'}).encode())
                     return
 
-                # Use gemini-2.5-flash which is currently available
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_id}:generateContent?key={api_key}"
                 
                 gemini_payload = {
                     "contents": [{
-                        "parts": [{"text": prompt}]
+                        "parts": parts
                     }]
                 }
                 
@@ -76,8 +131,8 @@ class GeminiHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(e.code)
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
-                print(f"API Error Details: {error_body}") # Print to terminal for debugging
-                self.wfile.write(json.dumps({'error': f'Gemini API Error: {e.reason}', 'details': error_body}).encode())
+                print(f"API Error Details: {error_body}") 
+                self.wfile.write(json.dumps({'error': f'API Error: {e.reason}', 'details': error_body}).encode())
             except Exception as e:
                 self.send_response(500)
                 self.send_header('Content-type', 'application/json')
